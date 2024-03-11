@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, Date, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey, Date, DateTime, Boolean, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 
@@ -12,17 +12,22 @@ class User(Base):
     gender = Column(String)
     weight = Column(Float)
     height = Column(Float)
+    email = Column(String, unique=True, nullable=False)
+    bio = Column(Text)
     fitness_goals = relationship("FitnessGoal", back_populates="user", cascade="all, delete, delete-orphan")
     workouts = relationship("Workout", back_populates="user", cascade="all, delete, delete-orphan")
     nutrition_logs = relationship("NutritionLog", back_populates="user", cascade="all, delete, delete-orphan")
     sleep_records = relationship("SleepRecord", back_populates="user", cascade="all, delete, delete-orphan")
+    mood_logs = relationship("MoodLog", back_populates="user", cascade="all, delete, delete-orphan")
 
 class FitnessGoal(Base):
     __tablename__ = 'fitness_goals'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     goal = Column(String, nullable=False)
+    description = Column(Text)
     target_date = Column(Date)
+    completed = Column(Boolean, default=False)
     user = relationship("User", back_populates="fitness_goals")
 
 class Workout(Base):
@@ -33,6 +38,8 @@ class Workout(Base):
     duration = Column(Float)  # in minutes
     type = Column(String)
     intensity = Column(String)
+    calories_burned = Column(Float)
+    notes = Column(Text)
     user = relationship("User", back_populates="workouts")
 
 class NutritionLog(Base):
@@ -41,7 +48,11 @@ class NutritionLog(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     date = Column(Date, nullable=False)
     meal_type = Column(String)
-    calories = Column(Integer)  # Total calories consumed in this meal
+    calories = Column(Integer)
+    proteins = Column(Float)  # grams
+    carbs = Column(Float)  # grams
+    fats = Column(Float)  # grams
+    notes = Column(Text)
     user = relationship("User", back_populates="nutrition_logs")
 
 class SleepRecord(Base):
@@ -50,8 +61,20 @@ class SleepRecord(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
-    quality = Column(String)  # This could be 'Poor', 'Fair', 'Good', or 'Excellent'
+    quality = Column(String)
+    deep_sleep_duration = Column(Float)  # in hours
+    notes = Column(Text)
     user = relationship("User", back_populates="sleep_records")
+
+class MoodLog(Base):
+    __tablename__ = 'mood_logs'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    date = Column(Date, nullable=False)
+    mood = Column(String)
+    stress_level = Column(Integer)  # scale 1-10
+    notes = Column(Text)
+    user = relationship("User", back_populates="mood_logs")
 
 def create_database():
     engine = create_engine('sqlite:///health_fitness_app.db', echo=True)
