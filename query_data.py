@@ -44,7 +44,7 @@ if __name__ == '__main__':
     print("\nAverage Sleep Duration:")
     get_average_sleep_duration(user_id)
     
-    date = "2024-03-10"  # Example date
+    date = "2024-03-04"  # Example date
     print(f"\nNutrition Summary for {date}:")
     get_nutrition_summary(user_id, date)
     
