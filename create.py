@@ -12,7 +12,7 @@ class User(Base):
     gender = Column(String)
     weight = Column(Float)
     height = Column(Float)
-    email = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=False,index=True)
     bio = Column(Text)
     fitness_goals = relationship("FitnessGoal", back_populates="user", cascade="all, delete, delete-orphan")
     workouts = relationship("Workout", back_populates="user", cascade="all, delete, delete-orphan")
@@ -34,7 +34,7 @@ class Workout(Base):
     __tablename__ = 'workouts'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    date = Column(Date, nullable=False)
+    date = Column(Date, nullable=False,index=True)
     duration = Column(Float)  # in minutes
     type = Column(String)
     intensity = Column(String)
@@ -46,7 +46,7 @@ class NutritionLog(Base):
     __tablename__ = 'nutrition_logs'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    date = Column(Date, nullable=False)
+    date = Column(Date, nullable=False,index=True)
     meal_type = Column(String)
     calories = Column(Integer)
     proteins = Column(Float)  # grams
@@ -59,7 +59,7 @@ class SleepRecord(Base):
     __tablename__ = 'sleep_records'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    start_time = Column(DateTime, nullable=False)
+    start_time = Column(DateTime, nullable=False,index=True)
     end_time = Column(DateTime, nullable=False)
     quality = Column(String)
     deep_sleep_duration = Column(Float)  # in hours
@@ -70,7 +70,7 @@ class MoodLog(Base):
     __tablename__ = 'mood_logs'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    date = Column(Date, nullable=False)
+    date = Column(Date, nullable=False,index=True)
     mood = Column(String)
     stress_level = Column(Integer)  # scale 1-10
     notes = Column(Text)
