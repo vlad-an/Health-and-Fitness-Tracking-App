@@ -48,10 +48,8 @@ def get_detailed_nutrition_summary(user_id, start_date, end_date):
     print(f"Nutrition Summary from {start_date} to {end_date}:")
     print(f"Total Calories: {total_calories}, Proteins: {total_proteins}g, Carbs: {total_carbs}g, Fats: {total_fats}g")
 
-def get_monthly_workout_summary(user_id):
+def get_monthly_workout_summary(user_id, current_month, current_year):
     """Monthly summary of workouts including total duration and average intensity"""
-    current_month = datetime.now().month
-    current_year = datetime.now().year
     workouts = session.query(Workout).filter(Workout.user_id == user_id, func.extract('month', Workout.date) == current_month, func.extract('year', Workout.date) == current_year).all()
     total_duration = sum([workout.duration for workout in workouts])
     average_intensity = {workout.intensity for workout in workouts}
@@ -107,7 +105,7 @@ if __name__ == '__main__':
     get_detailed_nutrition_summary(user_id, start_date, end_date)
 
     print("\nMonthly Workout Summary:")
-    get_monthly_workout_summary(user_id)
+    get_monthly_workout_summary(user_id, 7, 2023)
 
     print("\nSleep Quality Overview:")
     get_sleep_quality_overview(user_id)
