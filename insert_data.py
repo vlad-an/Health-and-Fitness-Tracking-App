@@ -7,14 +7,15 @@ from datetime import datetime, timedelta
 from sqlalchemy.exc import SQLAlchemyError
 
 
-engine = create_engine('sqlite:///health_fitness_app.db')
-Base.metadata.bind = engine
+engine = create_engine('sqlite:///health_fitness_app.db') # Create an engine that connects to the database
+Base.metadata.bind = engine # Bind the engine to the metadata of the Base class to reflect the tables
 
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
-faker = Faker()
+DBSession = sessionmaker(bind=engine) # Create a session to interact with the database
+session = DBSession() # Create an instance of the session
+faker = Faker() # Create an instance of the Faker class to generate fake data
 
 def create_sample_users():
+    '''Create sample users to populate the database'''
     for _ in range(20):  # Creating 20 sample users to enrich the dataset
         user = User(
             name=faker.name(),
@@ -29,7 +30,7 @@ def create_sample_users():
     session.commit()
 
 def create_sample_fitness_goals(users):
-    #users = session.query(User).all()
+    '''Create sample fitness goals for the users in the database'''
     for user in users:
         for _ in range(random.randint(1, 3)):  # Multiple fitness goals per user
             goal = FitnessGoal(
@@ -43,7 +44,7 @@ def create_sample_fitness_goals(users):
     session.commit()
 
 def create_sample_workouts(users):
-    #users = session.query(User).all()
+    '''Create sample workout history for the users in the database'''
     for user in users:
         for _ in range(random.randint(5, 15)):  # More diverse workout history
             workout = Workout(
@@ -59,7 +60,7 @@ def create_sample_workouts(users):
     session.commit()
 
 def create_sample_nutrition_logs(users):
-    #users = session.query(User).all()
+    '''Create sample nutrition logs for the users in the database'''
     for user in users:
         for _ in range(14):  # Extending to two weeks of nutrition logs for more data
             nutrition_log = NutritionLog(
@@ -76,9 +77,9 @@ def create_sample_nutrition_logs(users):
     session.commit()
 
 def create_sample_sleep_records(users):
-    #users = session.query(User).all()
+    '''Create sample sleep records for the users in the database'''
     for user in users:
-        for _ in range(10):  # 10 days of sleep records for extended data
+        for _ in range(10):  # 10 days of sleep records 
             start_time = datetime.now() - timedelta(days=random.randint(1, 30))
             end_time = start_time + timedelta(hours=random.randint(6, 12))
             sleep_record = SleepRecord(
@@ -93,7 +94,7 @@ def create_sample_sleep_records(users):
     session.commit()
 
 def create_sample_mood_logs(users):
-    #users = session.query(User).all()
+    '''Create sample mood logs for the users in the database'''
     for user in users:
         for _ in range(10):  # 10 days of mood logs to understand emotional well-being
             mood_log = MoodLog(
@@ -107,6 +108,7 @@ def create_sample_mood_logs(users):
     session.commit()
 
 def register_user_with_goals(user_details, goal_details):
+    '''Register a new user with fitness goals and return the user's ID for further operations'''
     try:
         new_user = User(**user_details)  # Assuming user_details is a dict with user info
         session.add(new_user)
@@ -121,16 +123,17 @@ def register_user_with_goals(user_details, goal_details):
         print("User and goals successfully created.")
         return new_user.id  # Returning the new user's ID for further use
     except SQLAlchemyError as e:
-        session.rollback()
+        session.rollback() # Rollback the changes in case of an error
         print(f"Error during registration: {e}")
         return None
 
 def log_workout_and_update_goals(user_id, workout_data, goal_updates):
+    '''Log a new workout and update the status of fitness goals for the user'''
     try:
-        new_workout = Workout(user_id=user_id, **workout_data)
-        session.add(new_workout)
+        new_workout = Workout(user_id=user_id, **workout_data) # Assuming workout_data is a dict with workout info
+        session.add(new_workout) # Log the new workout
 
-        for goal_id, completed in goal_updates.items():
+        for goal_id, completed in goal_updates.items(): # Update the status of fitness goals
             goal = session.query(FitnessGoal).filter_by(id=goal_id, user_id=user_id).first()
             if goal:
                 goal.completed = completed
@@ -138,7 +141,7 @@ def log_workout_and_update_goals(user_id, workout_data, goal_updates):
         session.commit()
         print("Workout logged and goals updated successfully.")
     except SQLAlchemyError as e:
-        session.rollback()
+        session.rollback() # Rollback the changes in case of an error
         print(f"Error during workout logging: {e}")
 
 if __name__ == '__main__':
@@ -149,8 +152,8 @@ if __name__ == '__main__':
     create_sample_sleep_records(users)
     create_sample_mood_logs(users)
     
-    user_details = {
-        'name': faker.name(),
+    user_details = { # Example user details
+        'name': faker.name(), 
         'age': random.randint(18, 65),
         'gender': random.choice(['Male', 'Female', 'Other']),
         'weight': random.uniform(50.0, 120.0),
@@ -159,14 +162,14 @@ if __name__ == '__main__':
         'bio': faker.text(max_nb_chars=200)
     }
 
-    goal_details = [{
+    goal_details = [{ # Example fitness goal details
         'goal': faker.sentence(nb_words=6),
         'description': faker.text(max_nb_chars=200),
         'target_date': datetime.now() + timedelta(days=random.randint(30, 365)),
         'completed': False
     }]
 
-    new_user_id = register_user_with_goals(user_details, goal_details)
+    new_user_id = register_user_with_goals(user_details, goal_details) # Register a new user with fitness goals
     if new_user_id:
         workout_data = {
             'date': datetime.now(),
@@ -177,5 +180,5 @@ if __name__ == '__main__':
             'notes': 'Felt great!',
         }
         
-        goal_updates = {1: True}  # Example goal update, assuming goal ID 1 exists and is to be marked as completed
+        goal_updates = {1: True}  # Example goal update (goal ID: completed status)
         log_workout_and_update_goals(new_user_id, workout_data, goal_updates)

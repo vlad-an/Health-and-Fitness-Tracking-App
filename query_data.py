@@ -4,9 +4,9 @@ from create import Base, User, FitnessGoal, Workout, NutritionLog, SleepRecord, 
 from datetime import datetime, timedelta
 
 # Establish a connection to the database
-engine = create_engine('sqlite:///health_fitness_app.db')
-Session = sessionmaker(bind=engine)
-session = Session()
+engine = create_engine('sqlite:///health_fitness_app.db') # Create an engine that connects to the database
+Session = sessionmaker(bind=engine) # Create a session to interact with the database
+session = Session() # Create an instance of the session
 
 def get_user_workouts(user_id):
     """Retrieve all workouts for a specific user"""

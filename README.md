@@ -233,3 +233,15 @@ The rationale behind using transactions in these scenarios includes:
 ### Conclusion
 
 In summary, the strategic use of transactions in the Health and Fitness Tracking App ensures that critical operations such as user registration and workout logging are handled in a way that guarantees data accuracy, consistency, and integrity. This not only improves the reliability and robustness of the application but also enhances the user experience by providing a dependable platform for tracking and managing health and fitness data.
+
+
+# Step 5: Execution
+
+Run these commands : 
+
+- `python3 -m venv venv
+- source venv/bin/activate
+- pip3 install -r requirements.txt
+- python3 create.py
+- python3 insert_data.py
+- python3 query_data.py`
