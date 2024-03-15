@@ -250,3 +250,8 @@ Run these commands :
 
 If you would like to test the database, run this command : 
 -  `pytest test_models.py`
+
+
+# AI Statement
+
+AI was used to generate formatting for the code, as well as outline the schema and sample queries.

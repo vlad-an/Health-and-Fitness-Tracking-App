@@ -28,6 +28,7 @@ def create_sample_users():
         )
         session.add(user)
     session.commit()
+    return session.query(User).all()
 
 def create_sample_fitness_goals(users):
     '''Create sample fitness goals for the users in the database'''
