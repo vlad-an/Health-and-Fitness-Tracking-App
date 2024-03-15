@@ -239,9 +239,14 @@ In summary, the strategic use of transactions in the Health and Fitness Tracking
 
 Run these commands : 
 
-- `python3 -m venv venv
-- source venv/bin/activate
-- pip3 install -r requirements.txt
-- python3 create.py
-- python3 insert_data.py
-- python3 query_data.py`
+- `python3 -m venv venv`
+- `source venv/bin/activate`
+- `pip3 install -r requirements.txt`
+- `python3 create.py`
+- `python3 insert_data.py`
+- `python3 query_data.py`
+
+# Step 6: Testing 
+
+If you would like to test the database, run this command : 
+-  `pytest test_models.py`
